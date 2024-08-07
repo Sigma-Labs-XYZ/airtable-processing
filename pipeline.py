@@ -66,11 +66,19 @@ def normalise_and_explode_interview(interview: dict):
 
 def main():
     api = Api(ACCESS_TOKEN)
-    summaryTable = api.table(BASE_ID, 'Summary')
-    trackerTable = api.table(BASE_ID, 'Interview Tracker')
+    summary_table = api.table(BASE_ID, 'Summary')
+    tracker_table = api.table(BASE_ID, 'Interview Tracker')
+
+    summary_records = []
+    table_iter = summary_table.iterate()
+    while True:
+        try:
+            summary_records += next(table_iter)
+        except StopIteration:
+            break
 
     interviews = []
-    for row in summaryTable.all():
+    for row in summary_table.all():
         interviews += extract_interviews(row['fields'])
 
     for interview in interviews:
@@ -81,7 +89,7 @@ def main():
 
     # Less efficient than batch_create, but keeps the records in a logical order in views!
     for interview in interviews:
-        print(trackerTable.create(interview, typecast=True))
+        print(tracker_table.create(interview, typecast=True))
 
 
 if __name__ == "__main__":
