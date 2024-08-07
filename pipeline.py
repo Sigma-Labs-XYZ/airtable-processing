@@ -70,7 +70,7 @@ def main():
     trackerTable = api.table(BASE_ID, 'Interview Tracker')
 
     interviews = []
-    for row in summaryTable.all(max_records=5, sort = ['-Name']):
+    for row in summaryTable.all():
         interviews += extract_interviews(row['fields'])
 
     for interview in interviews:
